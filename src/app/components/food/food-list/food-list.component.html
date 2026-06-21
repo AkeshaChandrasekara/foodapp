@@ -1,0 +1,108 @@
+<div class="food-page">
+  
+  <div class="food-hero">
+    <div class="food-hero-content">
+      <div class="hero-badge">🍕 Premium Selection</div>
+      <h1 class="hero-title">Discover Our <span class="highlight">Menu</span></h1>
+      <p class="hero-description">
+        Explore our curated collection of delicious dishes crafted with love and the finest ingredients.
+      </p>
+    </div>
+    <div class="hero-decoration">
+      <span class="deco-icon">🍔</span>
+      <span class="deco-icon">🍝</span>
+      <span class="deco-icon">🥗</span>
+      <span class="deco-icon">🍣</span>
+    </div>
+  </div>
+
+  <!-- Search and Filter -->
+  <div class="search-filter-section">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input
+        type="text"
+        [(ngModel)]="searchQuery"
+        (input)="searchFood()"
+        placeholder="Search for your favorite dishes..."
+        class="search-input">
+      <button *ngIf="searchQuery" (click)="clearSearch()" class="clear-btn">✕</button>
+    </div>
+
+    <div class="category-filters">
+      <button
+        *ngFor="let category of categories"
+        (click)="filterByCategory(category)"
+        class="category-btn"
+        [class.active]="selectedCategory === category">
+        {{ category }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-state">
+    <div class="loading-spinner"></div>
+    <p>Loading our delicious menu...</p>
+  </div>
+
+  <!-- Food Items Grid -->
+  <div *ngIf="!isLoading && filteredItems.length > 0" class="food-grid">
+    <div *ngFor="let item of filteredItems" class="food-card">
+      <div class="food-card-image">
+        <img
+          [src]="item.imageUrl || defaultImage"
+          [alt]="item.name"
+          (error)="onImageError($event)"
+          loading="lazy">
+        <div class="food-status-badge" [class.available]="item.isAvailable">
+          {{ item.isAvailable ? 'Available' : 'Sold Out' }}
+        </div>
+        <div class="food-overlay">
+          <button class="quick-view-btn" [routerLink]="['/food', item.id]">Quick View</button>
+        </div>
+      </div>
+
+      <div class="food-card-content">
+        <div class="food-card-header">
+          <h3 class="food-name">
+            <a [routerLink]="['/food', item.id]">{{ item.name }}</a>
+          </h3>
+          <span class="food-category">{{ item.category }}</span>
+        </div>
+        <p class="food-description">{{ item.description || 'A delicious dish prepared with care.' }}</p>
+       <div class="food-card-footer">
+  <span class="food-price">LKR{{ item.price.toFixed(2) || '0.00' }}</span>
+  <button
+    (click)="addToCart(item)"
+    [disabled]="!item.isAvailable"
+    class="add-cart-btn">
+    <svg class="cart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="9" cy="21" r="1"></circle>
+      <circle cx="20" cy="21" r="1"></circle>
+      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+    </svg>
+    {{ item.isAvailable ? 'Add to Cart' : 'Sold Out' }}
+  </button>
+</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!isLoading && filteredItems.length === 0" class="empty-state">
+    <div class="empty-icon">🍽️</div>
+    <h2>No Items Found</h2>
+    <p *ngIf="searchQuery || selectedCategory !== 'All'">
+      Try adjusting your search or filter criteria
+    </p>
+    <p *ngIf="!searchQuery && selectedCategory === 'All'">
+      No food items are currently available
+    </p>
+    <button *ngIf="searchQuery || selectedCategory !== 'All'"
+            (click)="clearSearch(); filterByCategory('All')"
+            class="btn-primary">
+      Clear Filters
+    </button>
+  </div>
+</div>

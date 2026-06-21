@@ -1,0 +1,106 @@
+
+<div class="detail-page">
+  <div class="detail-container">
+
+    <button (click)="goBack()" class="back-btn">
+      <span class="back-icon">←</span> Back to Menu
+    </button>
+
+    <div *ngIf="isLoading" class="loading-state">
+      <div class="loading-spinner"></div>
+      <p>Loading delicious details...</p>
+    </div>
+
+
+    <div *ngIf="!isLoading && errorMessage" class="error-state">
+      <div class="error-icon">⚠️</div>
+      <h2>Oops! Something went wrong</h2>
+      <p class="error-message">{{ errorMessage }}</p>
+      <div class="error-actions">
+        <button (click)="goBack()" class="btn-primary">Back to Menu</button>
+        <button (click)="ngOnInit()" class="btn-secondary">Retry</button>
+      </div>
+    </div>
+
+    <div *ngIf="!isLoading && !errorMessage && foodItem" class="detail-card">
+      <div class="detail-image">
+        <img
+          [src]="foodItem.imageUrl || defaultImage"
+          [alt]="foodItem.name"
+          (error)="onImageError($event)">
+        <div class="status-badge" [class.available]="foodItem.isAvailable">
+          {{ foodItem.isAvailable ? 'Available' : 'Sold Out' }}
+        </div>
+      </div>
+
+      <div class="detail-content">
+        <div class="detail-header">
+          <h1>{{ foodItem.name }}</h1>
+          <span class="category-tag">{{ foodItem.category }}</span>
+        </div>
+
+        <div class="detail-meta">
+          <span class="meta-item">
+            <span class="meta-icon">⏱</span>
+            Prep Time: {{ foodItem.preparationTime || 30 }} min
+          </span>
+          <span class="meta-item">
+            <span class="meta-icon">⭐</span>
+            Rating: 4.8/5
+          </span>
+        </div>
+
+        <p class="detail-description">
+          {{ foodItem.description || 'No description available for this item.' }}
+        </p>
+
+        <div class="detail-price">
+          <span class="price">LKR{{ foodItem.price.toFixed(2) || '0.00' }}</span>
+        </div>
+
+        <div class="detail-actions">
+          <div class="quantity-control">
+            <button (click)="decreaseQuantity()" [disabled]="quantity <= 1" class="qty-btn">−</button>
+            <span class="quantity">{{ quantity }}</span>
+            <button (click)="increaseQuantity()" class="qty-btn">+</button>
+          </div>
+
+          <button
+            (click)="addToCart()"
+            [disabled]="!foodItem.isAvailable"
+            class="add-btn">
+
+            <svg class="cart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="9" cy="21" r="1"></circle>
+              <circle cx="20" cy="21" r="1"></circle>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+            </svg>
+            {{ foodItem.isAvailable ? 'Add to Cart' : 'Sold Out' }}
+          </button>
+        </div>
+
+        <div class="detail-features">
+          <div class="feature">
+            <span class="feature-icon">✓</span>
+            <span>Fresh Ingredients</span>
+          </div>
+          <div class="feature">
+            <span class="feature-icon">✓</span>
+            <span>Halal Certified</span>
+          </div>
+          <div class="feature">
+            <span class="feature-icon">✓</span>
+            <span>Fast Delivery</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="!isLoading && !errorMessage && !foodItem" class="not-found">
+      <div class="not-found-icon">🍽️</div>
+      <h2>Food Item Not Found</h2>
+      <p>Sorry, the item you're looking for doesn't exist.</p>
+      <a routerLink="/food" class="btn-primary">Back to Menu</a>
+    </div>
+  </div>
+</div>

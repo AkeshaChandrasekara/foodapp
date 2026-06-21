@@ -1,0 +1,39 @@
+<div style="display: inline-block; width: 0; height: 0; overflow: hidden; position: absolute; top: 0; left: 0;">
+  <app-notification></app-notification>
+</div>
+
+<nav class="navbar">
+  <div class="nav-container">
+    <div class="nav-left">
+      <button class="menu-toggle" (click)="toggleMenu()">☰</button>
+      <a routerLink="/" class="brand">
+        <span class="brand-icon">🍕</span>
+        <span class="brand-text">Peri<span class="brand-highlight">Zza</span></span>
+      </a>
+    </div>
+
+    <div class="nav-links" [class.open]="menuOpen">
+      <a routerLink="/food" routerLinkActive="active" (click)="menuOpen = false">Menu</a>
+      <a *ngIf="isLoggedIn" routerLink="/cart" routerLinkActive="active" (click)="menuOpen = false">
+        Cart <span *ngIf="cartItemCount > 0" class="cart-badge">{{ cartItemCount }}</span>
+      </a>
+      <a *ngIf="isLoggedIn" routerLink="/orders" routerLinkActive="active" (click)="menuOpen = false">My Orders</a>
+      <a *ngIf="isAdmin" routerLink="/admin" routerLinkActive="active" (click)="menuOpen = false">Admin Panel</a>
+
+      <ng-container *ngIf="!isLoggedIn; else userMenu">
+        <a routerLink="/login" routerLinkActive="active" (click)="menuOpen = false">Login</a>
+      </ng-container>
+
+      <ng-template #userMenu>
+        <div class="user-menu">
+          <span class="user-greeting">Hello , {{ username }}</span>
+          <button (click)="logout()" class="logout-btn">Logout</button>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</nav>
+
+<main class="main-content">
+  <router-outlet></router-outlet>
+</main>

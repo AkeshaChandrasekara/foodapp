@@ -1,0 +1,203 @@
+<div class="register-wrapper">
+
+  <div class="hero-section">
+    <div class="hero-content">
+      <div class="hero-badge">🍕 Premium Food Delivery</div>
+      <h1 class="hero-title">
+        Delicious <span class="highlight">Food</span><br>
+        Delivered <span class="highlight">Hot & Fresh</span>
+      </h1>
+      <p class="hero-description">
+        Create your account and discover amazing food from the best restaurants.
+        Fast delivery, great taste, and exclusive offers waiting for you.
+      </p>
+
+
+   <div class="food-items-display">
+  <div class="food-item">
+    <img src="https://cdn-icons-png.flaticon.com/512/2094/2094661.png" alt="Pizza" onerror="this.style.display='none'; this.parentElement.querySelector('.fallback-icon').style.display='block'">
+    <span class="fallback-icon" style="display:none; font-size:40px;">🍕</span>
+    <span>Pizza</span>
+  </div>
+  <div class="food-item">
+    <img src="https://cdn-icons-png.flaticon.com/128/5930/5930051.png" alt="Burger" onerror="this.style.display='none'; this.parentElement.querySelector('.fallback-icon').style.display='block'">
+    <span class="fallback-icon" style="display:none; font-size:40px;">🍔</span>
+    <span>Burger</span>
+  </div>
+  <div class="food-item">
+    <img src="https://cdn-icons-png.flaticon.com/128/4727/4727368.png" alt="Pasta" onerror="this.style.display='none'; this.parentElement.querySelector('.fallback-icon').style.display='block'">
+    <span class="fallback-icon" style="display:none; font-size:35px;">🍝</span>
+    <span>Pasta</span>
+  </div>
+  <div class="food-item">
+    <img src="https://cdn-icons-png.flaticon.com/128/3496/3496528.png" alt="Sushi" onerror="this.style.display='none'; this.parentElement.querySelector('.fallback-icon').style.display='block'">
+    <span class="fallback-icon" style="display:none; font-size:35px;">🍣</span>
+    <span>Desserts</span>
+  </div>
+</div>
+
+
+
+
+      <div class="hero-stats">
+        <div class="stat-item">
+          <span class="stat-number">500+</span>
+          <span class="stat-label">Restaurants</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">10K+</span>
+          <span class="stat-label">Happy Customers</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">4.8★</span>
+          <span class="stat-label">Average Rating</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="register-section">
+    <div class="register-card">
+      <div class="register-header">
+        <h2>Create Account</h2>
+        <p>Join us and start your food journey</p>
+      </div>
+
+      <div *ngIf="success" class="success-message">
+        ✅ Registration successful! Redirecting to login...
+      </div>
+
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" novalidate>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="fullName">Full Name</label>
+            <input
+              type="text"
+              id="fullName"
+              formControlName="fullName"
+              autocomplete="name"
+              class="form-control"
+              [class.error]="registerForm.get('fullName')?.invalid && registerForm.get('fullName')?.touched"
+              placeholder="Enter your full name">
+            <div class="error-message" *ngIf="registerForm.get('fullName')?.invalid && registerForm.get('fullName')?.touched">
+              <span *ngIf="registerForm.get('fullName')?.errors?.['required']">Full name is required</span>
+              <span *ngIf="registerForm.get('fullName')?.errors?.['minlength']">Name must be at least 2 characters</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input
+              type="text"
+              id="username"
+              formControlName="username"
+              autocomplete="username"
+              class="form-control"
+              [class.error]="registerForm.get('username')?.invalid && registerForm.get('username')?.touched"
+              placeholder="Choose a username">
+            <div class="error-message" *ngIf="registerForm.get('username')?.invalid && registerForm.get('username')?.touched">
+              <span *ngIf="registerForm.get('username')?.errors?.['required']">Username is required</span>
+              <span *ngIf="registerForm.get('username')?.errors?.['minlength']">Username must be at least 3 characters</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input
+            type="email"
+            id="email"
+            formControlName="email"
+            autocomplete="email"
+            class="form-control"
+            [class.error]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched"
+            placeholder="Enter your email">
+          <div class="error-message" *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
+            <span *ngIf="registerForm.get('email')?.errors?.['required']">Email is required</span>
+            <span *ngIf="registerForm.get('email')?.errors?.['email']">Please enter a valid email</span>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              formControlName="password"
+              autocomplete="new-password"
+              class="form-control"
+              [class.error]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
+              placeholder="Create password">
+            <div class="error-message" *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
+              <span *ngIf="registerForm.get('password')?.errors?.['required']">Password is required</span>
+              <span *ngIf="registerForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="confirmPassword">Confirm Password</label>
+            <input
+              type="password"
+              id="confirmPassword"
+              formControlName="confirmPassword"
+              autocomplete="new-password"
+              class="form-control"
+              [class.error]="(registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched) || (registerForm.hasError('mismatch') && registerForm.get('confirmPassword')?.touched)"
+              placeholder="Confirm password">
+            <div class="error-message" *ngIf="registerForm.get('confirmPassword')?.touched">
+              <span *ngIf="registerForm.get('confirmPassword')?.errors?.['required']">Confirm password is required</span>
+              <span *ngIf="registerForm.hasError('mismatch') && registerForm.get('confirmPassword')?.touched">Passwords do not match</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="phoneNumber">Phone Number</label>
+          <input
+            type="tel"
+            id="phoneNumber"
+            formControlName="phoneNumber"
+            autocomplete="tel"
+            class="form-control"
+            [class.error]="registerForm.get('phoneNumber')?.invalid && registerForm.get('phoneNumber')?.touched"
+            placeholder="Enter phone number">
+          <div class="error-message" *ngIf="registerForm.get('phoneNumber')?.invalid && registerForm.get('phoneNumber')?.touched">
+            <span *ngIf="registerForm.get('phoneNumber')?.errors?.['required']">Phone number is required</span>
+            <span *ngIf="registerForm.get('phoneNumber')?.errors?.['pattern']">Enter a valid phone number (10-15 digits)</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="address">Delivery Address</label>
+          <input
+            type="text"
+            id="address"
+            formControlName="address"
+            autocomplete="street-address"
+            class="form-control"
+            [class.error]="registerForm.get('address')?.invalid && registerForm.get('address')?.touched"
+            placeholder="Enter your address">
+          <div class="error-message" *ngIf="registerForm.get('address')?.invalid && registerForm.get('address')?.touched">
+            <span *ngIf="registerForm.get('address')?.errors?.['required']">Address is required</span>
+            <span *ngIf="registerForm.get('address')?.errors?.['minlength']">Address must be at least 5 characters</span>
+          </div>
+        </div>
+
+        <div class="error-message" *ngIf="error">{{ error }}</div>
+
+        <button
+          type="submit"
+          class="btn-primary"
+          [disabled]="registerForm.invalid || isLoading">
+          <span *ngIf="!isLoading">Create Account</span>
+          <span *ngIf="isLoading">Creating account...</span>
+        </button>
+      </form>
+
+      <div class="register-footer">
+        <p>Already have an account? <a routerLink="/login">Sign In</a></p>
+      </div>
+    </div>
+  </div>
+</div>

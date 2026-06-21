@@ -1,0 +1,158 @@
+
+<div class="cart-page">
+  <div class="cart-container">
+
+    <div class="cart-header">
+      <div class="header-left">
+        <h1>Your Cart</h1>
+        <span class="item-count">{{ getTotalItems() }} items</span>
+      </div>
+      <button routerLink="/food" class="continue-shopping">
+        ← Continue Shopping
+      </button>
+    </div>
+
+    <div *ngIf="errorMessage" class="error-message">
+      <span class="error-icon">⚠️</span>
+      {{ errorMessage }}
+      <button (click)="retryLoading()" class="retry-btn">Retry</button>
+    </div>
+
+    <div *ngIf="isLoading" class="loading-state">
+      <div class="loading-spinner"></div>
+      <p>Loading your cart...</p>
+    </div>
+
+    <!-- Cart Content -->
+    <div *ngIf="!isLoading && cart && cart.items && cart.items.length > 0" class="cart-content">
+      <div class="cart-items">
+        <div *ngFor="let item of cart.items" class="cart-item">
+          <div class="item-image">
+            <img [src]="item.foodItem.imageUrl || 'assets/default-food.jpg'" [alt]="item.foodItem.name">
+            <div class="item-status" [class.available]="item.foodItem.isAvailable">
+              {{ item.foodItem.isAvailable ? '✓' : '✕' }}
+            </div>
+          </div>
+
+          <div class="item-details">
+            <h3>{{ item.foodItem.name }}</h3>
+            <p class="item-category">{{ item.foodItem.category }}</p>
+            <span class="item-price">LKR {{ item.price.toFixed(2) }}</span>
+          </div>
+
+          <div class="item-actions">
+            <div class="quantity-control">
+              <button (click)="updateQuantity(item.id!, item.quantity - 1)" class="qty-btn">−</button>
+              <span class="quantity">{{ item.quantity }}</span>
+              <button (click)="updateQuantity(item.id!, item.quantity + 1)" class="qty-btn">+</button>
+            </div>
+            <span class="item-total">LKR {{ (item.price * item.quantity).toFixed(2) }}</span>
+            <button (click)="removeItem(item.id!)" class="remove-btn">
+              <svg class="trash-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="cart-actions-bottom">
+          <button (click)="clearCart()" class="clear-btn">Clear Cart</button>
+        </div>
+      </div>
+
+
+      <div class="cart-summary">
+        <h2>Order Summary</h2>
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <span>LKR {{ cart.total.toFixed(2) }}</span>
+        </div>
+        <div class="summary-row">
+          <span>Delivery Fee</span>
+          <span>LKR 250.00</span>
+        </div>
+        <div class="summary-row">
+          <span>Tax (5%)</span>
+          <span>LKR {{ (cart.total * 0.05).toFixed(2) }}</span>
+        </div>
+        <div class="summary-divider"></div>
+        <div class="summary-row total">
+          <span>Total</span>
+          <span class="total-amount">LKR {{ (cart.total + 250 + cart.total * 0.05).toFixed(2) }}</span>
+        </div>
+
+       
+        <button
+          *ngIf="!showCheckoutForm"
+          (click)="proceedToCheckout()"
+          [disabled]="cart.items.length === 0"
+          class="checkout-btn">
+          Proceed to Checkout
+        </button>
+
+
+        <div *ngIf="showCheckoutForm" class="checkout-form">
+          <h3>Delivery Details</h3>
+
+          <form [formGroup]="checkoutForm">
+            <div class="form-group">
+              <label for="deliveryAddress">Delivery Address</label>
+              <input
+                type="text"
+                id="deliveryAddress"
+                formControlName="deliveryAddress"
+                class="form-control"
+                placeholder="Enter your delivery address"
+                [class.error]="checkoutForm.get('deliveryAddress')?.invalid && checkoutForm.get('deliveryAddress')?.touched">
+              <div class="error-message" *ngIf="checkoutForm.get('deliveryAddress')?.invalid && checkoutForm.get('deliveryAddress')?.touched">
+                <span *ngIf="checkoutForm.get('deliveryAddress')?.errors?.['required']">Delivery address is required</span>
+                <span *ngIf="checkoutForm.get('deliveryAddress')?.errors?.['minlength']">Address must be at least 5 characters</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="phoneNumber">Phone Number</label>
+              <input
+                type="tel"
+                id="phoneNumber"
+                formControlName="phoneNumber"
+                class="form-control"
+                placeholder="Enter phone number"
+                [class.error]="checkoutForm.get('phoneNumber')?.invalid && checkoutForm.get('phoneNumber')?.touched">
+              <div class="error-message" *ngIf="checkoutForm.get('phoneNumber')?.invalid && checkoutForm.get('phoneNumber')?.touched">
+                <span *ngIf="checkoutForm.get('phoneNumber')?.errors?.['required']">Phone number is required</span>
+                <span *ngIf="checkoutForm.get('phoneNumber')?.errors?.['pattern']">Enter a valid phone number (10-15 digits)</span>
+              </div>
+            </div>
+
+            <div class="checkout-actions">
+              <button
+                (click)="placeOrder()"
+                [disabled]="isPlacingOrder"
+                class="btn-primary">
+                <span *ngIf="!isPlacingOrder">Place Order</span>
+                <span *ngIf="isPlacingOrder">Placing Order...</span>
+              </button>
+              <button
+                (click)="cancelCheckout()"
+                class="btn-secondary">
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <p class="checkout-note">* Delivery fee and taxes may vary</p>
+      </div>
+    </div>
+
+    <!-- Empty Cart -->
+    <div *ngIf="!isLoading && !errorMessage && (!cart || !cart.items || cart.items.length === 0)" class="empty-cart">
+      <div class="empty-icon">🛒</div>
+      <h2>Your cart is empty</h2>
+      <p>Looks like you haven't added any items yet.</p>
+      <p class="empty-sub">Explore our delicious menu and find your favorites!</p>
+      <a routerLink="/food" class="btn-primary">Browse Menu</a>
+    </div>
+  </div>
+</div>

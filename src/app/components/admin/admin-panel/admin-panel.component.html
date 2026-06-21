@@ -1,0 +1,214 @@
+
+<div class="admin-container">
+
+  <aside class="admin-sidebar">
+    <div class="sidebar-header">
+      <h2>⚙️ Admin Panel</h2>
+      <p>Food Ordering System</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button
+        (click)="switchTab('dashboard')"
+        [class.active]="activeTab === 'dashboard'"
+        class="nav-btn">
+        <span class="nav-icon">📊</span>
+        Dashboard
+      </button>
+
+      <button
+        (click)="switchTab('food')"
+        [class.active]="activeTab === 'food'"
+        class="nav-btn">
+        <span class="nav-icon">🍕</span>
+        Manage Food
+        <span class="badge">{{ totalFoodItems }}</span>
+      </button>
+
+      <button
+        (click)="switchTab('orders')"
+        [class.active]="activeTab === 'orders'"
+        class="nav-btn">
+        <span class="nav-icon">📦</span>
+        Manage Orders
+        <span class="badge warning">{{ pendingOrders }}</span>
+      </button>
+
+      <button
+        (click)="switchTab('users')"
+        [class.active]="activeTab === 'users'"
+        class="nav-btn">
+        <span class="nav-icon">👥</span>
+        Manage Users
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button routerLink="/food" class="back-btn">
+        ← Back to Store
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="admin-main">
+
+    <div *ngIf="isLoading" class="loading-overlay">
+      <div class="spinner"></div>
+      <p>Loading dashboard...</p>
+    </div>
+
+    <!-- Dashboard Tab -->
+    <div *ngIf="activeTab === 'dashboard' && !isLoading" class="tab-content">
+      <div class="tab-header">
+        <h1>Dashboard</h1>
+        <p>Welcome back, Admin! Here's what's happening with your restaurant.</p>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon orders">📦</div>
+          <div class="stat-info">
+            <h3>{{ totalOrders }}</h3>
+            <p>Total Orders</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon revenue">💰</div>
+          <div class="stat-info">
+            <h3>{{ formatCurrency(totalRevenue) }}</h3>
+            <p>Total Revenue</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon pending">⏳</div>
+          <div class="stat-info">
+            <h3>{{ pendingOrders }}</h3>
+            <p>Pending Orders</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon food">🍕</div>
+          <div class="stat-info">
+            <h3>{{ totalFoodItems }}</h3>
+            <p>Food Items</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Status Distribution -->
+      <div class="status-distribution">
+        <h3>Order Status Distribution</h3>
+        <div class="status-bars">
+          <div class="status-bar-item">
+            <span class="status-label">Pending</span>
+            <div class="bar-track">
+              <div class="bar-fill"
+                   [style.width.%]="(getOrderStatusCount('PENDING') / totalOrders * 100) || 0"
+                   style="background: #ffd93d">
+              </div>
+            </div>
+            <span class="status-count">{{ getOrderStatusCount('PENDING') }}</span>
+          </div>
+
+          <div class="status-bar-item">
+            <span class="status-label">Confirmed</span>
+            <div class="bar-track">
+              <div class="bar-fill"
+                   [style.width.%]="(getOrderStatusCount('CONFIRMED') / totalOrders * 100) || 0"
+                   style="background: #6bcfff">
+              </div>
+            </div>
+            <span class="status-count">{{ getOrderStatusCount('CONFIRMED') }}</span>
+          </div>
+
+          <div class="status-bar-item">
+            <span class="status-label">Preparing</span>
+            <div class="bar-track">
+              <div class="bar-fill"
+                   [style.width.%]="(getOrderStatusCount('PREPARING') / totalOrders * 100) || 0"
+                   style="background: #ff9f43">
+              </div>
+            </div>
+            <span class="status-count">{{ getOrderStatusCount('PREPARING') }}</span>
+          </div>
+
+          <div class="status-bar-item">
+            <span class="status-label">Delivered</span>
+            <div class="bar-track">
+              <div class="bar-fill"
+                   [style.width.%]="(getOrderStatusCount('DELIVERED') / totalOrders * 100) || 0"
+                   style="background: #51cf66">
+              </div>
+            </div>
+            <span class="status-count">{{ getOrderStatusCount('DELIVERED') }}</span>
+          </div>
+
+          <div class="status-bar-item">
+            <span class="status-label">Cancelled</span>
+            <div class="bar-track">
+              <div class="bar-fill"
+                   [style.width.%]="(getOrderStatusCount('CANCELLED') / totalOrders * 100) || 0"
+                   style="background: #ff6b6b">
+              </div>
+            </div>
+            <span class="status-count">{{ getOrderStatusCount('CANCELLED') }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="recent-orders">
+        <h3>Recent Orders</h3>
+        <div class="table-container">
+          <table class="orders-table">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let order of recentOrders">
+                <td>#{{ order.id }}</td>
+                <td>{{ order.user.username || 'N/A' }}</td>
+                <td>{{ formatCurrency(order.totalAmount) }}</td>
+                <td>
+                  <span class="status-badge" [style.background]="getStatusColor(order.status)">
+                    {{ getStatusLabel(order.status) }}
+                  </span>
+                </td>
+                <td>{{ order.orderDate | date:'short' }}</td>
+                <td>
+                  <button (click)="switchTab('orders')" class="view-btn">View</button>
+                </td>
+              </tr>
+              <tr *ngIf="recentOrders.length === 0">
+                <td colspan="6" class="no-data">No orders yet</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="activeTab === 'users' && !isLoading" class="tab-content">
+      <div class="tab-header">
+        <h1>User Management</h1>
+        <p>Manage your restaurant users and their permissions.</p>
+      </div>
+      <div class="coming-soon">
+        <div class="coming-icon">👥</div>
+        <h3>User Management Coming Soon</h3>
+        <p>This feature is under development. You'll be able to manage user accounts here.</p>
+      </div>
+    </div>
+  </main>
+</div>

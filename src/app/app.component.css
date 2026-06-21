@@ -1,45 +1,36 @@
-/* src/styles.css */
+
+:host {
+  position: relative;
+  display: block;
+}
+
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+
 }
 
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #f5f7fa;
-  color: #2d3436;
-  line-height: 1.6;
-  overflow: hidden;
-}
-
-/* Hide navbar on login and register pages */
-body.no-navbar .navbar {
-  display: none !important;
-}
-
-body.no-navbar .main-content {
-  padding-top: 0 !important;
-}
-
-/* Navbar - Red Theme Matching Left Side */
 .navbar {
   background: linear-gradient(135deg, #dc2626 0%, #b91c1c 50%, #7f1d1d 100%);
   padding: 0 20px;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15);
   position: sticky;
   top: 0;
   z-index: 1000;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  height: 65px;
+  display: flex;
+  align-items: center;
 }
 
 .nav-container {
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  height: 65px;
+  align-items: center;
+  width: 100%;
 }
 
 .nav-left {
@@ -60,9 +51,12 @@ body.no-navbar .main-content {
 
 .brand {
   color: white;
+  text-decoration: none;
   font-size: 24px;
   font-weight: 700;
-  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   transition: opacity 0.3s;
 }
 
@@ -70,7 +64,11 @@ body.no-navbar .main-content {
   opacity: 0.9;
 }
 
-.brand .brand-highlight {
+.brand-icon {
+  font-size: 26px;
+}
+
+.brand-highlight {
   color: #fbbf24;
 }
 
@@ -83,41 +81,37 @@ body.no-navbar .main-content {
 .nav-links a {
   color: rgba(255, 255, 255, 0.9);
   text-decoration: none;
-  padding: 8px 12px;
-  border-radius: 6px;
+  padding: 8px 16px;
+  border-radius: 8px;
   transition: all 0.3s;
-  font-size: 15px;
   font-weight: 500;
+  font-size: 15px;
 }
 
 .nav-links a:hover {
-  background: rgba(255, 255, 255, 0.15);
   color: white;
+  background: rgba(255, 255, 255, 0.15);
 }
 
 .nav-links a.active {
-  background: rgba(255, 255, 255, 0.2);
   color: white;
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .cart-badge {
-  display: inline-block;
   background: #fbbf24;
   color: #1a1a1a;
   border-radius: 50%;
-  padding: 0 6px;
+  padding: 2px 8px;
   font-size: 11px;
   font-weight: 700;
-  min-width: 20px;
-  text-align: center;
-  line-height: 20px;
   margin-left: 4px;
 }
 
 .user-menu {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 15px;
 }
 
 .user-greeting {
@@ -126,13 +120,12 @@ body.no-navbar .main-content {
 }
 
 .logout-btn {
+  padding: 8px 20px;
   background: rgba(255, 255, 255, 0.2);
   color: white;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  padding: 6px 16px;
-  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 13px;
   font-weight: 500;
   transition: all 0.3s;
 }
@@ -141,85 +134,55 @@ body.no-navbar .main-content {
   background: rgba(255, 255, 255, 0.3);
 }
 
-/* Main Content */
 .main-content {
   min-height: calc(100vh - 65px);
+  background: #f5f7fa;
+  overflow-y: auto; /* Add this to enable scrolling */
+  height: calc(100vh - 65px); /* Add this to fix height */
 }
 
-/* Scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #dc2626;
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #b91c1c;
-}
-
-/* Responsive */
 @media (max-width: 768px) {
   .menu-toggle {
     display: block;
   }
 
   .nav-links {
-    position: fixed;
+    display: none;
+    flex-direction: column;
+    position: absolute;
     top: 65px;
     left: 0;
     right: 0;
     background: linear-gradient(135deg, #dc2626 0%, #b91c1c 50%, #7f1d1d 100%);
-    flex-direction: column;
     padding: 20px;
-    gap: 12px;
-    transform: translateY(-120%);
-    transition: transform 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    gap: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   }
 
   .nav-links.open {
-    transform: translateY(0);
+    display: flex;
   }
 
   .nav-links a {
     width: 100%;
+    padding: 12px 16px;
     text-align: center;
-    padding: 12px;
   }
 
   .user-menu {
-    flex-direction: column;
     width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
   }
 
-  .logout-btn {
-    width: 100%;
+  .user-greeting {
+    text-align: center;
   }
 
   .brand {
     font-size: 20px;
-  }
-}
-
-@media (max-width: 480px) {
-  .nav-container {
-    height: 55px;
-  }
-
-  .brand {
-    font-size: 18px;
-  }
-
-  .nav-links {
-    top: 55px;
   }
 }

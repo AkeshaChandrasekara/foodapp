@@ -1,0 +1,96 @@
+
+<div class="orders-page">
+  <div class="orders-container">
+    
+    <div class="orders-header">
+      <div class="header-left">
+        <h1> My Orders</h1>
+        <span class="order-count">{{ orders.length }} orders</span>
+      </div>
+      <div class="status-filter">
+        <label for="statusFilter">Filter:</label>
+        <select id="statusFilter" [(ngModel)]="selectedStatus" (change)="loadOrders()">
+          <option *ngFor="let status of statuses" [value]="status">
+            {{ status === 'ALL' ? 'All Orders' : getStatusLabel(status) }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div *ngIf="errorMessage" class="error-message">
+      <span class="error-icon">⚠️</span>
+      {{ errorMessage }}
+      <button (click)="retryLoading()" class="retry-btn">Retry</button>
+    </div>
+
+    
+    <div *ngIf="isLoading" class="loading-state">
+      <div class="loading-spinner"></div>
+      <p>Loading your orders...</p>
+    </div>
+
+    <ng-container *ngIf="!isLoading">
+      
+      <div *ngIf="!errorMessage && orders && orders.length > 0" class="orders-list">
+        <div *ngFor="let order of getFilteredOrders()" class="order-card">
+          <div class="order-header">
+            <div class="order-id-date">
+              <span class="order-id">#{{ order.id }}</span>
+              <span class="order-date">{{ formatDate(order.orderDate) }}</span>
+            </div>
+            <div class="order-status" [style.background]="getStatusColor(order.status)">
+              <span class="status-icon">{{ getStatusIcon(order.status) }}</span>
+              {{ getStatusLabel(order.status) }}
+            </div>
+          </div>
+
+          <div class="order-items">
+            <div *ngFor="let item of order.items" class="order-item">
+              <div class="item-info">
+                <span class="item-name">{{ item.foodItem.name || 'Unknown Item' }}</span>
+                <span class="item-quantity">× {{ item.quantity }}</span>
+              </div>
+              <span class="item-price">LKR {{ (item.price * item.quantity).toFixed(2) }}</span>
+            </div>
+          </div>
+
+          <div class="order-footer">
+            <div class="order-details">
+              <span class="delivery-info">
+                <span class="info-icon">📍</span>
+                {{ order.deliveryAddress || 'No address provided' }}
+              </span>
+              <span class="delivery-info">
+                <span class="info-icon">📞</span>
+                {{ order.phoneNumber || 'No phone number' }}
+              </span>
+            </div>
+            <div class="order-total">
+              <span class="total-label">Total:</span>
+              <span class="total-amount">LKR {{ order.totalAmount.toFixed(2) || '0.00' }}</span>
+            </div>
+          </div>
+
+          <div class="order-actions" *ngIf="order.status !== 'DELIVERED' && order.status !== 'CANCELLED'">
+            <button (click)="trackOrder(order.id!)" class="track-btn">
+              <span class="track-icon">📍</span> Track Order
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="!errorMessage && (!orders || orders.length === 0)" class="empty-state">
+        <div class="empty-icon">📦</div>
+        <h2>No Orders Yet</h2>
+        <p>You haven't placed any orders yet.</p>
+        <p class="empty-sub">Explore our delicious menu and place your first order!</p>
+        <a routerLink="/food" class="btn-primary">Browse Menu</a>
+      </div>
+
+      <div *ngIf="!errorMessage && orders && orders.length > 0 && getFilteredOrders().length === 0" class="empty-filter">
+        <p>No orders found with status: <strong>{{ getStatusLabel(selectedStatus) }}</strong></p>
+        <button (click)="selectedStatus = 'ALL'; loadOrders()" class="btn-secondary">View All Orders</button>
+      </div>
+    </ng-container>
+  </div>
+</div>

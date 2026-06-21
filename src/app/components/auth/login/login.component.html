@@ -1,0 +1,127 @@
+<div class="login-wrapper">
+
+  <div class="hero-section">
+    <div class="hero-content">
+      <div class="hero-badge">🍕 Premium Food Delivery</div>
+      <h1 class="hero-title">
+        Delicious <span class="highlight">Food</span><br>
+        Delivered <span class="highlight">Hot & Fresh</span>
+      </h1>
+      <p class="hero-description">
+        Order your favorite meals from the best restaurants in town.
+        Fast delivery, amazing taste, and 100% satisfaction guaranteed.
+      </p>
+
+    <div class="food-items-display">
+  <div class="food-item">
+    <img src="https://cdn-icons-png.flaticon.com/512/2094/2094661.png" alt="Pizza" onerror="this.style.display='none'; this.parentElement.querySelector('.fallback-icon').style.display='block'">
+    <span class="fallback-icon" style="display:none; font-size:40px;">🍕</span>
+    <span>Pizza</span>
+  </div>
+  <div class="food-item">
+    <img src="https://cdn-icons-png.flaticon.com/128/5930/5930051.png" alt="Burger" onerror="this.style.display='none'; this.parentElement.querySelector('.fallback-icon').style.display='block'">
+    <span class="fallback-icon" style="display:none; font-size:40px;">🍔</span>
+    <span>Burger</span>
+  </div>
+  <div class="food-item">
+    <img src="https://cdn-icons-png.flaticon.com/128/4727/4727368.png" alt="Pasta" onerror="this.style.display='none'; this.parentElement.querySelector('.fallback-icon').style.display='block'">
+    <span class="fallback-icon" style="display:none; font-size:35px;">🍝</span>
+    <span>Pasta</span>
+  </div>
+  <div class="food-item">
+    <img src="https://cdn-icons-png.flaticon.com/128/3496/3496528.png" alt="Sushi" onerror="this.style.display='none'; this.parentElement.querySelector('.fallback-icon').style.display='block'">
+    <span class="fallback-icon" style="display:none; font-size:35px;">🍣</span>
+    <span>Desserts</span>
+  </div>
+</div>
+
+      <div class="hero-stats">
+        <div class="stat-item">
+          <span class="stat-number">500+</span>
+          <span class="stat-label">Restaurants</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">10K+</span>
+          <span class="stat-label">Happy Customers</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">4.8★</span>
+          <span class="stat-label">Average Rating</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Side - Login Form -->
+  <div class="login-section">
+    <div class="login-card">
+      <div class="login-header">
+        <h2>Welcome Back!</h2>
+        <p>Sign in to continue your food journey</p>
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
+        <div class="form-group">
+          <label for="username">
+
+            Username
+          </label>
+          <input
+            type="text"
+            id="username"
+            formControlName="username"
+            autocomplete="username"
+            class="form-control"
+            [class.error]="loginForm.get('username')?.invalid && loginForm.get('username')?.touched"
+            placeholder="Enter your username">
+          <div class="error-message" *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched">
+            <span *ngIf="loginForm.get('username')?.errors?.['required']">Username is required</span>
+            <span *ngIf="loginForm.get('username')?.errors?.['minlength']">Username must be at least 3 characters</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">
+
+            Password
+          </label>
+          <input
+            type="password"
+            id="password"
+            formControlName="password"
+            autocomplete="current-password"
+            class="form-control"
+            [class.error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+            placeholder="Enter your password">
+          <div class="error-message" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+            <span *ngIf="loginForm.get('password')?.errors?.['required']">Password is required</span>
+            <span *ngIf="loginForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters</span>
+          </div>
+        </div>
+
+        <div class="form-options">
+          <label class="remember-me">
+            <input type="checkbox" checked>
+            <span class="checkmark"></span>
+            Remember me
+          </label>
+          <a href="#" class="forgot-password">Forgot Password?</a>
+        </div>
+
+        <div class="error-message" *ngIf="error">{{ error }}</div>
+
+        <button
+          type="submit"
+          class="btn-primary"
+          [disabled]="loginForm.invalid || isLoading">
+          <span *ngIf="!isLoading">Sign In</span>
+          <span *ngIf="isLoading">Signing in...</span>
+        </button>
+      </form>
+
+      <div class="login-footer">
+        <p>Don't have an account? <a routerLink="/register">Create Account</a></p>
+      </div>
+    </div>
+  </div>
+</div>
