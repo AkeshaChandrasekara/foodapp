@@ -1,7 +1,6 @@
-
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { FoodService } from '../../../services/food.service';
 import { OrderService } from '../../../services/order.service';
@@ -10,11 +9,12 @@ import { Order } from '../../../models/order.model';
 
 @Component({
   selector: 'app-admin-panel',
- // standalone: true,
+  standalone: true,
   templateUrl: './admin-panel.component.html',
   styleUrls: ['./admin-panel.component.css'],
   imports: [
-    CommonModule
+    CommonModule,
+    RouterLink
   ]
 })
 export class AdminPanelComponent implements OnInit {
@@ -26,7 +26,6 @@ export class AdminPanelComponent implements OnInit {
   totalRevenue: number = 0;
 
   recentOrders: Order[] = [];
-
   foodItems: FoodItem[] = [];
 
   isLoading: boolean = true;

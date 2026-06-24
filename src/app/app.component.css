@@ -4,12 +4,10 @@
   display: block;
 }
 
-
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-
 }
 
 .navbar {
@@ -137,8 +135,12 @@
 .main-content {
   min-height: calc(100vh - 65px);
   background: #f5f7fa;
-  overflow-y: auto; /* Add this to enable scrolling */
-  height: calc(100vh - 65px); /* Add this to fix height */
+  overflow-y: auto;
+}
+
+.main-content.admin-page {
+  min-height: 100vh;
+  height: 100vh;
 }
 
 @media (max-width: 768px) {

@@ -2,7 +2,8 @@
   <app-notification></app-notification>
 </div>
 
-<nav class="navbar">
+
+<nav class="navbar" *ngIf="showNavbar">
   <div class="nav-container">
     <div class="nav-left">
       <button class="menu-toggle" (click)="toggleMenu()">☰</button>
@@ -26,7 +27,7 @@
 
       <ng-template #userMenu>
         <div class="user-menu">
-          <span class="user-greeting">Hello , {{ username }}</span>
+          <span class="user-greeting">Hello, {{ username }}</span>
           <button (click)="logout()" class="logout-btn">Logout</button>
         </div>
       </ng-template>
@@ -34,6 +35,6 @@
   </div>
 </nav>
 
-<main class="main-content">
+<main class="main-content" [class.admin-page]="!showNavbar">
   <router-outlet></router-outlet>
 </main>
