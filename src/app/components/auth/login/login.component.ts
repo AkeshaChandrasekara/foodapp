@@ -49,7 +49,17 @@ export class LoginComponent {
       next: (response) => {
         this.isLoading = false;
         console.log('Login successful!');
-        this.router.navigate(['/food']);
+        console.log('User role:', response.role);
+
+        const userRole = response.role || 'USER';
+
+        if (userRole === 'ADMIN') {
+          console.log('Redirecting to Admin Panel...');
+          this.router.navigate(['/admin']);
+        } else {
+          console.log('Redirecting to Food page...');
+          this.router.navigate(['/food']);
+        }
       },
       error: (err) => {
         this.isLoading = false;
